@@ -6,20 +6,26 @@ let secondNumber ='';
 let operator='';
 
 
-// const onclickNumber = (number) => {if(!operator)
-//     {firstNumber +=number}
-// else
-//     {secondNumber+=number};
-// result.value += number}
+const onclickNumber = (number) => () => {
+        if(!operator){
+            firstNumber += number
+        }
+        else{
+            secondNumber += number
+        }
+        result.value += number;}
+    
 
-function onclickNumber(number){
-    if(!operator)
-        {firstNumber += number}
-    else
-        {secondNumber+= number};
-    result.value += number
-    () =>{};
-}
+
+// function onclickNumber(number){
+    
+    
+//     return () =>{if(!operator)
+//         {firstNumber += number}
+//     else
+//         {secondNumber+= number};
+//     result.value += number;};
+// }
 
 document.querySelector('#number1').addEventListener('click',onclickNumber('1'))
 document.querySelector('#number2').addEventListener('click', onclickNumber('2'))
