@@ -18,3 +18,7 @@ function inputEvent(event){
 if(!word) 이런식으로 만들면 됨
 
 6. 화면에 구현되는 숫자를 건드릴 때 그 숫자의 타입이 string인지 number인지 잘 확인하면서 할 것!
+
+8/6 ~ 8/9 계산기 공부
+
+[계산기.txt](https://github.com/dlxorb96/cloning-zerocho-webgame/files/6952606/default.txt)
