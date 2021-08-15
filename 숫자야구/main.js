@@ -66,6 +66,7 @@ function checkNumber(value) {
 }
 
 // 숫자 제출하기
+let out = 0;
 
 function submitEvent(event) {
   event.preventDefault() //기본 이벤트 제출 막기
@@ -95,10 +96,22 @@ function submitEvent(event) {
       // 자리가 같으면 스트라이크 다르면 볼
     }
   }
-  result.append(`${inputNumber}: ${strike}스트라이크 ${ball}볼`, document.createElement('br'))
+
+  if(strike === 0 && ball === 0){
+    out++;
+    result.append(`${inputNumber}: ${out}아웃!`, document.createElement('br'));
+  }else{
+    result.append(`${inputNumber}: ${strike}스트라이크 ${ball}볼`, document.createElement('br'))
+  }
+  
+  if(out === 3){
+    const message = document.createTextNode(`패배! 정답은${answer}`)
+    result.appendChild(message)
+    return;
+  }
+
   tries.push(inputNumber); //입력값을 tries에 집어넣는다.
 }
 
 gameForm.addEventListener('submit', submitEvent)
-
 
