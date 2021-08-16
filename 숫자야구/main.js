@@ -5,9 +5,20 @@ const what = document.querySelector('#what');
 const box = document.querySelector('#box')
 const gameForm = document.querySelector('#gameForm');
 const $input = document.querySelector('#gameInput');
-const result = document.querySelector('.result')
+const result = document.querySelector('.result');
 
-const HIDDEN_STRING = 'hidden'
+const opportunity1 = document.querySelector('#box div:nth-child(1)')
+const opportunity2 = document.querySelector('#box div:nth-child(2)')
+const opportunity3 = document.querySelector('#box div:nth-child(3)')
+const opportunity4 = document.querySelector('#box div:nth-child(4)')
+const opportunity5 = document.querySelector('#box div:nth-child(5)')
+const opportunity6 = document.querySelector('#box div:nth-child(6)')
+const opportunity7 = document.querySelector('#box div:nth-child(7)')
+const opportunity8 = document.querySelector('#box div:nth-child(8)')
+const opportunity9 = document.querySelector('#box div:nth-child(9)')
+const opportunity10 = document.querySelector('#box div:nth-child(10)')
+
+const HIDDEN_STRING = 'hidden';
 
 // 시작부분 시작하기 누르면 뜨는 거
 function clickEvent() {
@@ -65,8 +76,11 @@ function checkNumber(value) {
   return true;
 }
 
+
+let out = 0; //out 개수
+let opportunity = 0; //기회 개수
+
 // 숫자 제출하기
-let out = 0;
 
 function submitEvent(event) {
   event.preventDefault() //기본 이벤트 제출 막기
@@ -74,6 +88,20 @@ function submitEvent(event) {
   $input.value = ''  // 인풋창 다시 비우기
   if (!checkNumber(inputNumber)) {
     return;
+  }
+  //기회 색칠하기
+  opportunity++  
+  switch(opportunity){
+    case 10: opportunity10.style.background = 'red';
+    case 9: opportunity9.style.background = 'red';
+    case 8: opportunity8.style.background = 'red';
+    case 7: opportunity7.style.background = 'red';
+    case 6: opportunity6.style.background = 'red';
+    case 5: opportunity5.style.background = 'red';
+    case 4: opportunity4.style.background = 'red';
+    case 3: opportunity3.style.background = 'red';
+    case 2: opportunity2.style.background = 'red';
+    case 1: opportunity1.style.background = 'red';
   }
   // 맞출시
   if (inputNumber === answer) {
@@ -97,6 +125,7 @@ function submitEvent(event) {
     }
   }
 
+  // 0스트라이크 0볼일 시
   if(strike === 0 && ball === 0){
     out++;
     result.append(`${inputNumber}: ${out}아웃!`, document.createElement('br'));
@@ -109,7 +138,6 @@ function submitEvent(event) {
     result.appendChild(message)
     return;
   }
-
   tries.push(inputNumber); //입력값을 tries에 집어넣는다.
 }
 
