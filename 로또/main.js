@@ -21,12 +21,32 @@ const win = shuffleSlice.slice().sort((a, b) => {return a-b})
 
 console.log(win, bonus)
 
+function colorize(number,$tag){
+  if(number <= 10){
+    $tag.style.backgroundColor = 'red';
+    $tag.style.color = 'white';
+  }else if(number <=20){
+    $tag.style.backgroundColor = 'yellow';
+  }else if(number <=30){
+    $tag.style.backgroundColor = 'green';
+    $tag.style.color = 'white';
+  }else if(number <=40){
+    $tag.style.backgroundColor = 'blue';
+    $tag.style.color = 'white';
+  }else if(number <=45){
+    $tag.style.backgroundColor = 'black';
+    $tag.style.color = 'white';
+  }
+}
 
 function createNumber(number, target){
 	const $ball = document.createElement('div');
 	$ball.className = 'random-number';
+  colorize(number, $ball)
 	$ball.textContent = number;
 	target.appendChild($ball);
+  
+  //공색깔 바꾸기
 }
 
 for(let i=0; i<6; i++){
@@ -36,7 +56,6 @@ for(let i=0; i<6; i++){
 
 setTimeout(() =>{createNumber(bonus, $span)
 } , 7000)
-
 
 
 // setTimeout(() =>{createNumber(win[0], result)
