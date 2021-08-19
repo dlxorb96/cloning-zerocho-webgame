@@ -73,8 +73,10 @@ const score = {
   scissors: 1,
   paper: 2,
 }
-let message = '';
-let scoreMessage = '';
+let message;
+let scoreMessage = 0;
+let computerResult = 0;
+let userResult = 0;
 
 // 이벤트리스너 대신 if문을 통해서 만드는 방법
 let flagF = true;
@@ -92,19 +94,32 @@ function clickEvent(event){
   if([-2, 1].includes(diff)){
     scoreMessage += 1
     message = '승리';
+    userResult += 1;
   }else if([2, -1].includes(diff)){
     scoreMessage -= 1;
     message = '패배'
+    computerResult += 1;
   }else if([0].includes(diff)){
     message = '무승부'
   }
-  result.textContent = `점수 : ${scoreMessage} ${message}`
+  if(userResult >=3){
+    message = '당신의 승리' // 3점 달성시 나의 승리
+    result.textContent = `점수 : ${scoreMessage} ${message}` 
+  }else if(computerResult >=3){
+    message = '당신의 패배'  // 3점 패배시 나의 패배
+    result.textContent = `점수 : ${scoreMessage} ${message}`
 
-   //1초후에 다시 인터벌을 시작한다.
-  setTimeout(() =>{
-    flagF = true
-    intervalName = setInterval(changeComputerHand, 50);}
-  ,1000)
+  }else{
+    //1초후에 다시 인터벌을 시작한다.
+    setTimeout(() =>{
+      flagF = true
+      intervalName = setInterval(changeComputerHand, 50);}
+    ,1000)
+  }
+  result.textContent = `점수 : ${scoreMessage} ${message}`
+  console.log(userResult, computerResult)   
+
+  
   }
 }
 
