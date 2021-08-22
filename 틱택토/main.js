@@ -3,20 +3,21 @@
 
 
 const $table = document.createElement('table')
+const { body } = document
 
-// for(let i =0; i<3; i++){
-//   const $tr = document.createElement('tr')
-// 	for(let i =0; i<3; i++){
-// 		const $td = document.createElement('td')
-// 		$tr.append($td);
-// 	}
-// 	$table.append($tr);
-// }
+let turn = 'O'
 
-document.body.append($table)
-
-const arr = [1, 2, 3, 4, 5]
-const [one, two, three, four, five] = arr;
+function checkFunc(event){
+  if(event.target.textContent === ''){
+    if(turn === 'O'){
+      event.target.textContent = 'O'
+      turn = 'X'
+    }else if(turn ==='X'){
+      event.target.textContent = 'X'
+      turn = 'O'
+    }
+  }  
+}
 
 const rows = []
 
@@ -31,4 +32,6 @@ for(let i = 0; i<3; i++){
 	rows.push(cells)
 	$table.append($tr)
 }
-document.body.append($table)
+body.append($table)
+
+$table.addEventListener('click', checkFunc)
