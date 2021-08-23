@@ -5,18 +5,21 @@
 const $table = document.createElement('table')
 const { body } = document
 
-let turn = 'O'
+let turn = 'X'
 
 function checkFunc(event){
   if(event.target.textContent === ''){
-    if(turn === 'O'){
-      event.target.textContent = 'O'
-      turn = 'X'
-    }else if(turn ==='X'){
-      event.target.textContent = 'X'
-      turn = 'O'
-    }
-  }  
+  event.target.textContent = turn
+  turn = turn === 'X' ? 'O' : 'X'
+  }
+  //   if(turn === 'O'){
+  //     event.target.textContent = 'O'
+  //     turn = 'X'
+  //   }else if(turn ==='X'){
+  //     event.target.textContent = 'X'
+  //     turn = 'O'
+  //   }
+  // }  
 }
 
 const rows = []
