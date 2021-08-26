@@ -1,0 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#game-menu,
+#battle-menu,
+#message,
+#monster-stat {
+  display: none;
+}

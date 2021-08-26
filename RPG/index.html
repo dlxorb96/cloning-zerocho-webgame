@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<script src="main.js" defer></script>
+	<title>텍스트 RPG</title>
+</head>
+<body>
+	<form id="start-screen">
+		<input
+		required 
+		placeholder="이름을 등록해주세요"
+		maxlength="10"
+		type="text"
+		id="name-input">
+		<button>등록</button>
+	</form>
+
+	<div id="screen">
+		
+		<div id="hero-stat">
+			<span id="hero-name"></span>
+			<span id="hero-level"></span>
+			<span id="hero-hp"></span>
+			<span id="hero-xp"></span>
+			<span id="hero-att"></span>
+		</div>
+
+		<form id="game-menu">
+			<div id="menu-1">모험</div>
+			<div id="menu-2">휴식</div>
+			<div id="menu-3">종료</div>
+			<input id="menu-input">
+			<button id="menu-button">입력</button>
+		</form>
+
+		<form id="battle-menu">
+			<div id="battle-1">휴식</div>
+			<div id="battle-2">회복</div>
+			<div id="battle-3">도망</div>
+			<input id="batttle-input">
+			<button id="battle-button">입력</button>
+		</form>
+
+		<div id="message"></div>
+		<div id="monster-stat">
+			<span id="monster-name"></span>
+			<span id="monster-hp"></span>
+			<span id="monster-att"></span>
+		</div>
+
+	</div>
+</body>
+</html>
