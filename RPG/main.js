@@ -37,12 +37,12 @@ const heroStat = {
 	att: 10,
 	xp: 0,
 	attack (monster){
-		monster.hp -= heroStat.att
-		heroStat.hp -= monster.att
+		monster.hp -= this.att
+		this.hp -= monster.att
 		},
 	heal (monster){
-		heroStat.hp += 20
-		heroStat.hp -= monster.att
+		this.hp += 20
+		this.hp -= monster.att
 	}
 };
 	
