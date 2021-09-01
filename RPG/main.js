@@ -1,4 +1,4 @@
-'strict use';
+'use strict';
 
 const $startScreen = document.querySelector('#start-screen')
 const $gameMenu = document.querySelector('#game-menu');
@@ -60,7 +60,7 @@ $startScreen.addEventListener('submit', (event) =>{
 	$gameMenu.style.display = 'block'
 	$heroName.textContent = heroName  
 	heroStat['name'] = heroName
-	hero1 = JSON.parse(JSON.stringify(heroStat))
+	const hero1 = JSON.parse(JSON.stringify(heroStat))
 	$heroLevel.textContent = `level : ${hero1.level}`
 	$heroHp.textContent = `hp : ${hero1.hp} / ${hero1.maxhp}`
 	$heroAtt.textContent = `Att : ${hero1.att}`
@@ -80,9 +80,18 @@ $gameMenu.addEventListener('click',(event)=>{
 		$monsterName.textContent = monster1.name
 		$monsterHp.textContent = `hp : ${monster1.hp}`
 		$monsterAtt.textContent = `att : ${monster1.att}`
+		const hero1 = JSON.parse(JSON.stringify(heroStat))
+		$heroLevel.textContent = `level : ${hero1.level}`
+		$heroHp.textContent = `hp : ${hero1.hp} / ${hero1.maxhp}`
+		$heroAtt.textContent = `Att : ${hero1.att}`
+		$heroXp.textContent = `XP : ${hero1.xp}`
 		$battleMenu.addEventListener('click',(event)=>{
 			if(event.target.textContent ==='공격'){
 				heroStat.attack(monster1)
+				$heroHp.textContent = `hp : ${hero1.hp} / ${hero1.maxhp}`
+				$monsterHp.textContent = `hp : ${monster1.hp}`
+				$monsterAtt.textContent = `att : ${monster1.att}`
+				
 			}else if(event.target.textContent ==='회복'){
 
 			}else if (event.target.textContent ==='도망'){
