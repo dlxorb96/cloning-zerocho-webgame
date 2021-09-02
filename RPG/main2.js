@@ -13,27 +13,8 @@ const $monsterName = document.querySelector('#monster-name');
 const $monsterHp = document.querySelector('#monster-hp');
 const $monsterAtt = document.querySelector('#monster-att');
 const $message = document.querySelector('#message');
-const $monsterImg = document.querySelector('#monster-img')
+const $monsterImg = document.querySelector('#monster-img');
 
-class Hero {
-	constructor(game, name){
-		this.game = game;
-		this.name = name;
-		this.lev = 1;
-		this.maxHp = 100;
-		this.hp = 100;
-		this.xp = 0;
-		this.att = 10;
-
-	}
-	attack(target){
-		target.hp -= this.att;
-	}
-	heal(monster){
-		this.hp += 20;
-		this.hp -= monster.att;
-	}
-}
 class Game{
 	constructor(name){
 		this.monster = null;
@@ -49,7 +30,7 @@ class Game{
 		$gameMenu.addEventListener('click', this.onGameMenuClick);
 		$battleMenu.addEventListener('click',this.onBattleMenuClick);
 		this.changeScreen('game');
-		new Hero(this, name);
+		this.hero = new Hero(this, name);
 		this.updateHeroStat();
 	}
 	changeScreen(screen){
@@ -85,15 +66,15 @@ class Game{
 			this.changeScreen('game');
 		}
 	}
-	updateHeroStat(){
+	updateHeroStat() {
 		const { hero } = this;
+    console.log(this)
 		if(hero === null){
 			$heroName.textContent = '';
 			$heroLevel.textContent = '';
 			$heroHp.textContent = '';
 			$heroXp.textContent = '';
 			$heroAtt.textContent = '';
-			console.log(1)
 			return;
 		}
 		$heroName.textContent = hero.name;
@@ -101,6 +82,25 @@ class Game{
 		$heroHp.textContent = `HP: ${hero.hp} / ${hero.maxHp}`;
 		$heroXp.textContent = `XP: ${hero.xp} / ${15 * hero.lev}`;
 		$heroAtt.textContent = `ATT : ${hero.att}`;	
+	}
+}
+
+class Hero {
+	constructor(game, name){
+		this.game = game;
+		this.name = name;
+		this.lev = 1;
+		this.maxHp = 100;
+		this.hp = 100;
+		this.xp = 0;
+		this.att = 10;
+	}
+	attack(target){
+		target.hp -= this.att;
+	}
+	heal(monster){
+		this.hp += 20;
+		this.hp -= monster.att;
 	}
 }
 
@@ -112,7 +112,6 @@ class Monster{
 		this.hp = hp;
 		this.xp = xp;
 		this.att  = att;
-
 	}
 	attack(target){
 		target.hp -= this.att;
@@ -120,6 +119,7 @@ class Monster{
 }
 
 let game = null;
+
 $startScreen.addEventListener('submit', (event) =>{
 	event.preventDefault();
 	const name = event.target['name-input'].value;
