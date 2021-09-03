@@ -22,7 +22,7 @@ class Game{
 		this.monsterList = [
 			{ name: '슬라임', hp : 25, att: 10, xp: 10},
 			{ name: '스켈레톤', hp : 50, att: 15, xp: 20},
-			{ name: '마왕', hp : 150, att: 35, xp: 50},
+			{ name: '마왕', hp : 150, hp : 150, att: 35, xp: 50},
 		];
 		this.start(name);
 	}
@@ -46,13 +46,25 @@ class Game{
 			$startScreen.style.display = 'none';
 			$gameMenu.style.display = 'none';
 			$battleMenu.style.display = 'block';
+      $monsterStat.style.display = 'block';
+      $monsterImg.style.display = 'block';
 		}
 	}
 	onGameMenuClick = (event) => {
 		event.preventDefault()
 		const click = event.target.textContent;
 		if(click === '모험'){
-			this.changeScreen('battle');
+			this.changeScreen('battle');const monsterName = this.monsterList[Math.floor(Math.random() * this.monsterList.length)]
+      this.monster = new Monster(
+        this, 
+        monsterName.name, 
+        monsterName,maxHp, 
+        monsterName.hp, 
+        monsterName.att, 
+        monsterName.xp
+        );
+
+      this.updateMonster();
 		}
 		else if(click === '휴식'){}
 		else if(click === '종료'){}
@@ -68,7 +80,6 @@ class Game{
 	}
 	updateHeroStat() {
 		const { hero } = this;
-    console.log(this)
 		if(hero === null){
 			$heroName.textContent = '';
 			$heroLevel.textContent = '';
@@ -83,6 +94,19 @@ class Game{
 		$heroXp.textContent = `XP: ${hero.xp} / ${15 * hero.lev}`;
 		$heroAtt.textContent = `ATT : ${hero.att}`;	
 	}
+  updateMonster(){
+    const { monster } = this;
+    if(monster ===null){
+      $monsterName.textContent = '';
+      $monsterHp.textContent = '';
+      $monsterAtt.textContent = '';
+      return;
+    }
+    
+    $monsterName.textContent = monsterName.name
+		$monsterHp.textContent = `hp : ${monsterName.hp} / ${monsterName.maxHp}`
+		$monsterAtt.textContent =``
+  }
 }
 
 class Hero {
@@ -105,7 +129,7 @@ class Hero {
 }
 
 class Monster{
-	constructor(game,name,hp,att,xp){
+	constructor(game, name, hp, att, xp){
 		this.game = game;
 		this.name = name;
 		this.maxHp = hp;
