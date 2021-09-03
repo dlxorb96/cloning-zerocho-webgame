@@ -54,11 +54,11 @@ class Game{
 		event.preventDefault()
 		const click = event.target.textContent;
 		if(click === '모험'){
-			this.changeScreen('battle');const monsterName = this.monsterList[Math.floor(Math.random() * this.monsterList.length)]
+			this.changeScreen('battle');
+			const monsterName = this.monsterList[Math.floor(Math.random() * this.monsterList.length)]
       this.monster = new Monster(
         this, 
         monsterName.name, 
-        monsterName,maxHp, 
         monsterName.hp, 
         monsterName.att, 
         monsterName.xp
@@ -72,10 +72,35 @@ class Game{
 	onBattleMenuClick = (event) =>{
 		event.preventDefault()
 		const click = event.target.textContent;
-		if(click === '공격'){}
+		if(click === '공격'){
+			const {monster, hero} = this
+			hero.attack(monster)
+			monster.attack(hero)
+			$heroHp.textContent = `HP: ${hero.hp} / ${hero.maxHp}`;
+			if(monster.hp <= 0){
+				$message.style.display = 'block'
+				$message.textContent = `${monster.name}을 잡아 경험치 ${monster.xp}를 얻었다.`
+				$monsterStat.style.display = 'none'
+				$monsterImg.style.display = 'none'
+				if(hero.xp >= 15 * hero.lev){ // 경험치가 꽉 찼을 때
+					hero.xp -= 15
+					hero.lev += 1
+					console.log(hero)
+				}else if( hero.xp < 15 * hero.lev){
+					hero.xp += monster.xp
+					console.log(hero)
+				}
+				hero.xp += monster.xp
+				this.changeScreen('game')
+			}else if(monster.hp > 0){
+				$monsterHp.textContent = `hp : ${monster.hp} / ${monster.maxHp}`
+			}
+		}
 		else if(click === '회복'){}
 		else if(click === '도망'){
 			this.changeScreen('game');
+			$monsterStat.style.display = 'none'
+			$monsterImg.style.display = 'none'
 		}
 	}
 	updateHeroStat() {
@@ -96,16 +121,16 @@ class Game{
 	}
   updateMonster(){
     const { monster } = this;
-    if(monster ===null){
+    if(monster === null){
       $monsterName.textContent = '';
       $monsterHp.textContent = '';
       $monsterAtt.textContent = '';
       return;
     }
     
-    $monsterName.textContent = monsterName.name
-		$monsterHp.textContent = `hp : ${monsterName.hp} / ${monsterName.maxHp}`
-		$monsterAtt.textContent =``
+    $monsterName.textContent = monster.name
+		$monsterHp.textContent = `hp : ${monster.hp} / ${monster.maxHp}`
+		$monsterAtt.textContent = `att : ${monster.att}`
   }
 }
 
