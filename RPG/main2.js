@@ -145,9 +145,9 @@ class Game{
 		const { hero, monster } = this
 		hero.lev += 1
 		$message.append(document.createElement('br'), `level ${hero.lev}이 되었다!` )
-		// $message.innerHTML += '\n' + `level ${hero.lev}이 되었다!`
-		// $message.innerHTML += `
-		// level ${hero.lev}이 되었다!`
+		$message.innerText += '\n' + `level ${hero.lev}이 되었다!`
+		$message.innerText += `
+		level ${hero.lev}이 되었다!`
 }}
 
 class Unit {
