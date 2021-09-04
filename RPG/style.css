@@ -25,3 +25,8 @@ body {
   height: 300px;
   background-color: black;
 }
+
+#message {
+  width: auto;
+  height: auto;
+}

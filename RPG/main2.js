@@ -63,8 +63,8 @@ class Game{
         monsterName.att, 
         monsterName.xp
         );
-
       this.updateMonster();
+			$message.style.display ='none'
 		}
 		else if(click === '휴식'){}
 		else if(click === '종료'){}
@@ -82,21 +82,16 @@ class Game{
 				$message.textContent = `${monster.name}을 잡아 경험치 ${monster.xp}를 얻었다.`
 				$monsterStat.style.display = 'none'
 				$monsterImg.style.display = 'none'
-				if(hero.xp >= 15 * hero.lev){ // 경험치가 꽉 찼을 때
-					hero.xp -= 15
-					hero.lev += 1
-					console.log(hero)
-				}else if( hero.xp < 15 * hero.lev){
-					hero.xp += monster.xp
-					console.log(hero)
-				}
-				hero.xp += monster.xp
+				this.getXp()
 				this.changeScreen('game')
+				this.updateHeroStat()
 			}else if(monster.hp > 0){
 				$monsterHp.textContent = `hp : ${monster.hp} / ${monster.maxHp}`
 			}
 		}
-		else if(click === '회복'){}
+		else if(click === '회복'){
+			this.hero.heal(monster)
+		}
 		else if(click === '도망'){
 			this.changeScreen('game');
 			$monsterStat.style.display = 'none'
@@ -132,29 +127,31 @@ class Game{
 		$monsterHp.textContent = `hp : ${monster.hp} / ${monster.maxHp}`
 		$monsterAtt.textContent = `att : ${monster.att}`
   }
-}
+	getXp(){
+		const {monster ,hero} = this
+		hero.xp += monster.xp
+		if(hero.xp >= (15 * hero.lev)){ // 레벨업
+			hero.xp -= 15 * hero.lev
+			this.levUp()
+			if(hero.xp >= (15 * hero.lev)){
+				hero.xp -= 15 * hero.lev
+			this.levUp()
+			}
+			console.log(hero.xp)
+			
+		}
+	}
+	levUp(){
+		const { hero, monster } = this
+		hero.lev += 1
+		$message.append(document.createElement('br'), `level ${hero.lev}이 되었다!` )
+		// $message.innerHTML += '\n' + `level ${hero.lev}이 되었다!`
+		// $message.innerHTML += `
+		// level ${hero.lev}이 되었다!`
+}}
 
-class Hero {
-	constructor(game, name){
-		this.game = game;
-		this.name = name;
-		this.lev = 1;
-		this.maxHp = 100;
-		this.hp = 100;
-		this.xp = 0;
-		this.att = 10;
-	}
-	attack(target){
-		target.hp -= this.att;
-	}
-	heal(monster){
-		this.hp += 20;
-		this.hp -= monster.att;
-	}
-}
-
-class Monster{
-	constructor(game, name, hp, att, xp){
+class Unit {
+	constructor(game,name,hp,att,xp){
 		this.game = game;
 		this.name = name;
 		this.maxHp = hp;
@@ -167,6 +164,26 @@ class Monster{
 	}
 }
 
+class Hero extends Unit{
+	constructor(game, name){
+		super(game,name,100,10,0);
+		this.lev = 1
+	}
+	// attack(target){
+	// 	super.attack(target)
+	// }
+	heal(monster){
+		this.hp += 20;
+		this.hp -= monster.att;
+	}
+}
+
+class Monster extends Unit{
+	constructor(game, name, hp, att, xp){
+		super(game,name,hp,att,xp)
+	}
+}
+
 let game = null;
 
 $startScreen.addEventListener('submit', (event) =>{
@@ -174,3 +191,11 @@ $startScreen.addEventListener('submit', (event) =>{
 	const name = event.target['name-input'].value;
 	game = new Game(name);
 })
+
+//1. 경험치 마무리하기
+//2. 나가기 기능
+//3. 죽었을 때 기능
+//4. 회복 기능
+//5. 최대체력 100못넘게 만들기
+//6. 레벨업시 능력치 오르기
+//7. 휴식기능 추가
