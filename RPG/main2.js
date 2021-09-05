@@ -80,22 +80,21 @@ class Game{
 			if(monster.hp <= 0){
 				$message.style.display = 'block'
 				$message.textContent = `${monster.name}을 잡아 경험치 ${monster.xp}를 얻었다.`
-				$monsterStat.style.display = 'none'
-				$monsterImg.style.display = 'none'
-				this.getXp()
-				this.changeScreen('game')
+        this.getXp()
 				this.updateHeroStat()
+        this.quit()
 			}else if(monster.hp > 0){
 				$monsterHp.textContent = `hp : ${monster.hp} / ${monster.maxHp}`
 			}
 		}
 		else if(click === '회복'){
-			this.hero.heal(monster)
+      const {hero, monster} = this
+			hero.heal(monster)
+      this.updateHeroStat()
+      this.updateMonster()
 		}
 		else if(click === '도망'){
-			this.changeScreen('game');
-			$monsterStat.style.display = 'none'
-			$monsterImg.style.display = 'none'
+			this.quit()
 		}
 	}
 	updateHeroStat() {
@@ -144,11 +143,21 @@ class Game{
 	levUp(){
 		const { hero, monster } = this
 		hero.lev += 1
-		$message.append(document.createElement('br'), `level ${hero.lev}이 되었다!` )
-		$message.innerText += '\n' + `level ${hero.lev}이 되었다!`
+		// $message.append(document.createElement('br'), `level ${hero.lev}이 되었다!` )
+		// $message.innerText += '\n' + `level ${hero.lev}이 되었다!`
 		$message.innerText += `
 		level ${hero.lev}이 되었다!`
-}}
+    hero.att += 5;
+    hero.maxHp += 5;
+    hero.hp = hero.maxHp
+  }
+  quit(){
+    this.monster = null;
+    $monsterStat.style.display = 'none'
+		$monsterImg.style.display = 'none'
+    this.changeScreen('game');
+  }
+}
 
 class Unit {
 	constructor(game,name,hp,att,xp){
@@ -192,7 +201,7 @@ $startScreen.addEventListener('submit', (event) =>{
 	game = new Game(name);
 })
 
-//1. 경험치 마무리하기
+//1. 경험치 마무리
 //2. 나가기 기능
 //3. 죽었을 때 기능
 //4. 회복 기능
