@@ -3,6 +3,7 @@
 const $startScreen = document.querySelector('#start-screen')
 const $gameMenu = document.querySelector('#game-menu');
 const $battleMenu = document.querySelector('#battle-menu');
+const $heroStat = document.querySelector('#hero-stat');
 const $heroName = document.querySelector('#hero-name');
 const $heroLevel = document.querySelector('#hero-level');
 const $heroHp = document.querySelector('#hero-hp');
@@ -32,6 +33,7 @@ class Game{
 		this.changeScreen('game');
 		this.hero = new Hero(this, name);
 		this.updateHeroStat();
+		$message.style.display = 'none'
 	}
 	changeScreen(screen){
 		if(screen === 'start'){
@@ -66,19 +68,27 @@ class Game{
       this.updateMonster();
 			$message.style.display ='none'
 		}
-		else if(click === '휴식'){}
+		else if(click === '휴식'){
+			const {hero} = this
+			$message.style.display = 'block'
+			$message.innerText = `체력이 모두 회복되었다.`
+			hero.hp = hero.maxHp
+			this.updateHeroStat()
+		}
 		else if(click === '종료'){}
 	}
 	onBattleMenuClick = (event) =>{
 		event.preventDefault()
 		const click = event.target.textContent;
+		$message.style.display = 'block'
+
 		if(click === '공격'){
 			const {monster, hero} = this
 			hero.attack(monster)
 			monster.attack(hero)
 			$heroHp.textContent = `HP: ${hero.hp} / ${hero.maxHp}`;
+			$message.innerText = `${hero.att}의 피해를 주고 ${monster.att}의 피해를 입었다.`
 			if(monster.hp <= 0){
-				$message.style.display = 'block'
 				$message.textContent = `${monster.name}을 잡아 경험치 ${monster.xp}를 얻었다.`
         this.getXp()
 				this.updateHeroStat()
@@ -86,15 +96,23 @@ class Game{
 			}else if(monster.hp > 0){
 				$monsterHp.textContent = `hp : ${monster.hp} / ${monster.maxHp}`
 			}
+			if(hero.hp <= 0){
+				this.becomeZeroHp()
+			}
 		}
 		else if(click === '회복'){
-      const {hero, monster} = this
+    	const {hero, monster} = this
 			hero.heal(monster)
-      this.updateHeroStat()
-      this.updateMonster()
+    	this.updateHeroStat()
+    	this.updateMonster()
+			$message.innerText = `20의 체력을 회복하고 ${monster.att}의 피해를 입었다.`
+			if(hero.hp <= 0){
+				this.becomeZeroHp()
+			}
 		}
 		else if(click === '도망'){
 			this.quit()
+			$message.innerText = `도망쳤다.`
 		}
 	}
 	updateHeroStat() {
@@ -136,7 +154,6 @@ class Game{
 				hero.xp -= 15 * hero.lev
 			this.levUp()
 			}
-			console.log(hero.xp)
 			
 		}
 	}
@@ -157,6 +174,21 @@ class Game{
 		$monsterImg.style.display = 'none'
     this.changeScreen('game');
   }
+	becomeZeroHp(){
+		this.hero = null;
+		$battleMenu.style.display = 'none'
+		this.monster = null;
+		$monsterImg.style.display = 'none'
+		this.updateHeroStat()
+		this.updateMonster()
+		$gameMenu.removeEventListener('click', this.onGameMenuClick);
+		$battleMenu.removeEventListener('click', this.onBattleMenuClick);
+		this.changeScreen('start')
+		$message.style.display = 'block'
+		$message.innerText =`죽었습니다. 새로운 영웅을 생성하세요`
+		game = null;
+		console.log(this.game)
+	}
 }
 
 class Unit {
@@ -182,8 +214,16 @@ class Hero extends Unit{
 	// 	super.attack(target)
 	// }
 	heal(monster){
-		this.hp += 20;
+		
+		if(this.hp >= this.maxHp){
+			$message.style.display = 'block';
+			$message.innerText = `이미 최대 체력입니다.`
+			
+		}else {
+			this.hp += 20;
 		this.hp -= monster.att;
+		}
+		
 	}
 }
 
@@ -201,10 +241,6 @@ $startScreen.addEventListener('submit', (event) =>{
 	game = new Game(name);
 })
 
-//1. 경험치 마무리
-//2. 나가기 기능
+
 //3. 죽었을 때 기능
-//4. 회복 기능
-//5. 최대체력 100못넘게 만들기
-//6. 레벨업시 능력치 오르기
-//7. 휴식기능 추가
+//4. 종료 기능
