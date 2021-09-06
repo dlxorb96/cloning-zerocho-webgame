@@ -75,7 +75,9 @@ class Game{
 			hero.hp = hero.maxHp
 			this.updateHeroStat()
 		}
-		else if(click === '종료'){}
+		else if(click === '종료'){
+			this.quitGame()
+		}
 	}
 	onBattleMenuClick = (event) =>{
 		event.preventDefault()
@@ -105,7 +107,6 @@ class Game{
 			hero.heal(monster)
     	this.updateHeroStat()
     	this.updateMonster()
-			$message.innerText = `20의 체력을 회복하고 ${monster.att}의 피해를 입었다.`
 			if(hero.hp <= 0){
 				this.becomeZeroHp()
 			}
@@ -189,6 +190,21 @@ class Game{
 		game = null;
 		console.log(this.game)
 	}
+	quitGame(){
+		this.hero = null;
+    this.monster = null;
+		this.updateMonster();
+		this.updateHeroStat();
+		$monsterImg.style.display = 'none';
+    this.changeScreen('start');
+		$gameMenu.removeEventListener('click', this.onGameMenuClick);
+		$battleMenu.removeEventListener('click', this.onBattleMenuClick);
+		game = null;
+		$startScreen.childNodes[1].value = ''
+		console.log($startScreen.childNodes[1])
+		console.dir($startScreen)
+		console.log($startScreen)
+	}
 }
 
 class Unit {
@@ -222,6 +238,8 @@ class Hero extends Unit{
 		}else {
 			this.hp += 20;
 		this.hp -= monster.att;
+		$message.innerText = `20의 체력을 회복하고 ${monster.att}의 피해를 입었다.`
+
 		}
 		
 	}
