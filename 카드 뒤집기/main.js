@@ -42,11 +42,38 @@ card.forEach((card, index) =>{
   }, 5000)
 })
 
-
+let cardSet =[];
+let doneCardSet = []
 function turnEvent(event){
-  const firstclick = event.currentTarget
+  const selectCard = event.currentTarget
+  cardSet.push(selectCard)
+  console.log(cardSet)
   event.currentTarget.classList.add('flipped')
-  console.log(event.currentTarget.style.backgroundColor)
+  
 }
 
-// wrapper.addEventListener('click', turnEvent)
+
+
+if(cardSet.length === 2){
+  console.log(cardSet.length)
+
+  // 뒤집은 카드의 색이 같은 경우
+  if(cardSet[0].style.backgroundColor ===cardSet[1].style.backgroundColor){
+    cardSet.splice(0,2).push(doneCardSet);
+  }else if(cardSet[0].style.backgroundColor !==cardSet[1].style.backgroundColor){
+    cardSet.forEach(card=>{card.classList.remove('flipped')})
+  }
+
+}
+// setTimeout(()=>{
+
+// }, 2000)
+// if(firstCard ===secondcard){
+//   firstCard.style.classList.add('flipped');
+//   secondcard.style.classList.add('flipped');
+// }else if( firstCard !== secondcard){
+//   setTimeout( () => {
+//     firstCard.style.classList.remove('flipped')
+//     secondcard.style.classList.remove('flipped')
+//   }, 2000)
+// }
