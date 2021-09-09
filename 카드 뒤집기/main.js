@@ -1,5 +1,5 @@
 'use strict';
-
+const $message = document.querySelector('#message')
 const wrapper = document.querySelector('#wrapper')
 let shuffled = [];
 let colors = ['red', 'orange', 'yellow', 'green', 'white', 'black'];
@@ -34,46 +34,45 @@ for(let i =0; i<12; i++){
 const card = document.querySelectorAll('.card')
 
 card.forEach((card, index) =>{
+  //시작할 때 카드 뒤집기
   setTimeout(() => {
     card.classList.add('flipped');
   }, 1000 + (100*index))
+
+  //시작할 때 뒤집은 카드 다시 뒤집기
   setTimeout(()=>{
     card.classList.remove('flipped')
-  }, 5000)
+  }, 2500)
 })
 
 let cardSet =[];
 let doneCardSet = []
 function turnEvent(event){
-  const selectCard = event.currentTarget
-  cardSet.push(selectCard)
-  console.log(cardSet)
+  const selectedCard = event.currentTarget
   event.currentTarget.classList.add('flipped')
+  cardSet.push(selectedCard)
   
-}
-
-
-
-if(cardSet.length === 2){
-  console.log(cardSet.length)
-
-  // 뒤집은 카드의 색이 같은 경우
-  if(cardSet[0].style.backgroundColor ===cardSet[1].style.backgroundColor){
-    cardSet.splice(0,2).push(doneCardSet);
-  }else if(cardSet[0].style.backgroundColor !==cardSet[1].style.backgroundColor){
-    cardSet.forEach(card=>{card.classList.remove('flipped')})
+  console.log(cardSet.length)  
+  console.log(cardSet)
+  if(cardSet.length !==2){
+    return;
   }
-
+  if(cardSet[0].style.backgroundColor ===cardSet[1].style.backgroundColor){
+    $message.append(`정답입니다!`)
+    doneCardSet.push(cardSet.splice(0,2))
+    console.log(doneCardSet,cardSet)
+  }else if(cardSet[0].style.backgroundColor !==cardSet[1].style.backgroundColor){
+    $message.textContent =`오답입니다!`;
+    setTimeout(()=>{
+      cardSet.forEach(card => card.classList.remove('flipped'))
+      cardSet = []
+    }, 1000)
+  }
 }
-// setTimeout(()=>{
 
-// }, 2000)
-// if(firstCard ===secondcard){
-//   firstCard.style.classList.add('flipped');
-//   secondcard.style.classList.add('flipped');
-// }else if( firstCard !== secondcard){
-//   setTimeout( () => {
-//     firstCard.style.classList.remove('flipped')
-//     secondcard.style.classList.remove('flipped')
-//   }, 2000)
-// }
+
+// //버그 및 개선사항
+// 1. 카드 뒤집기 무한으로 되는거
+// 2. 뒤집는 상황에서 뒤집기 > clickable 플래그 함수 만들기
+// 3. 오답입니다. 정답입니다. 제대로 안되는 거 해결하기
+// 4. 게임이 종료되면 축하 메세지와 게임 새로 시작하기
