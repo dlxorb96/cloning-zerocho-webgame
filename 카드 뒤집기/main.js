@@ -28,48 +28,60 @@ for(let i =0; i<12; i++){
   card.append(cardInner);
   cardInner.append(cardFront);
   cardInner.append(cardBack);
-  card.style.backgroundColor = shuffled[i]
+  cardBack.style.backgroundColor = shuffled[i]
 }
 
 const card = document.querySelectorAll('.card')
+let clickable = true;
+  card.forEach((card, index) =>{
+    clickable = false
+    //시작할 때 카드 뒤집기
+    setTimeout(() => {
+      card.classList.add('flipped');
+    }, 1000 + (100*index))
 
-card.forEach((card, index) =>{
-  //시작할 때 카드 뒤집기
-  setTimeout(() => {
-    card.classList.add('flipped');
-  }, 1000 + (100*index))
-
-  //시작할 때 뒤집은 카드 다시 뒤집기
-  setTimeout(()=>{
-    card.classList.remove('flipped')
-  }, 2500)
-})
+    //시작할 때 뒤집은 카드 다시 뒤집기
+    setTimeout(()=>{
+      card.classList.remove('flipped')
+      clickable = true;
+    }, 2500)
+  })
 
 let cardSet =[];
 let doneCardSet = []
+
 function turnEvent(event){
-  const selectedCard = event.currentTarget
-  event.currentTarget.classList.add('flipped')
-  cardSet.push(selectedCard)
-  
-  console.log(cardSet.length)  
-  console.log(cardSet)
-  if(cardSet.length !==2){
+  if(!clickable||doneCardSet.includes(event.currentTarget)|| cardSet[0] ===this)
+  return;
+    const selectedCard = event.currentTarget
+    event.currentTarget.classList.add('flipped')
+    cardSet.push(selectedCard)
+    console.log(document.querySelector('.card-back'))
+
+    console.log(cardSet.length)  
+    console.log(cardSet,selectedCard)
+    
+    if(cardSet.length !==2){
+      return;
+    }
+    if(cardSet[0].querySelector('.card-back').style.backgroundColor ===cardSet[1].querySelector('.card-back').style.backgroundColor){
+      $message.textContent = `정답입니다!`
+      doneCardSet.push(cardSet.splice(0,2))
+      doneCardSet = doneCardSet.concat(cardSet)
+      cardSet = [];
+      console.log(doneCardSet,cardSet)
+    }else if(cardSet[0].querySelector('.card-back').style.backgroundColor !==cardSet[1].querySelector('.card-back').style.backgroundColor){
+      $message.textContent =`오답입니다!`;
+      setTimeout(()=>{
+        cardSet.forEach(card => card.classList.remove('flipped'))
+        cardSet = []
+      }, 1000)
+  }
+  if(doneCardSet.length === 6){
+    $message.textContent = `축하합니다`
     return;
   }
-  if(cardSet[0].style.backgroundColor ===cardSet[1].style.backgroundColor){
-    $message.append(`정답입니다!`)
-    doneCardSet.push(cardSet.splice(0,2))
-    console.log(doneCardSet,cardSet)
-  }else if(cardSet[0].style.backgroundColor !==cardSet[1].style.backgroundColor){
-    $message.textContent =`오답입니다!`;
-    setTimeout(()=>{
-      cardSet.forEach(card => card.classList.remove('flipped'))
-      cardSet = []
-    }, 1000)
-  }
 }
-
 
 // //버그 및 개선사항
 // 1. 카드 뒤집기 무한으로 되는거
