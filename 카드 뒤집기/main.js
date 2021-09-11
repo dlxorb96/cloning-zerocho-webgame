@@ -51,32 +51,37 @@ let cardSet =[];
 let doneCardSet = []
 
 function turnEvent(event){
-  if(!clickable||doneCardSet.includes(event.currentTarget)|| cardSet[0] ===this)
+  if(!clickable||doneCardSet.includes(event.currentTarget)|| cardSet[0] ===this ||doneCardSet.length === 6)
   return;
-    const selectedCard = event.currentTarget
-    event.currentTarget.classList.add('flipped')
-    cardSet.push(selectedCard)
-    console.log(document.querySelector('.card-back'))
-
-    console.log(cardSet.length)  
-    console.log(cardSet,selectedCard)
-    
-    if(cardSet.length !==2){
-      return;
-    }
-    if(cardSet[0].querySelector('.card-back').style.backgroundColor ===cardSet[1].querySelector('.card-back').style.backgroundColor){
-      $message.textContent = `정답입니다!`
-      doneCardSet.push(cardSet.splice(0,2))
-      doneCardSet = doneCardSet.concat(cardSet)
-      cardSet = [];
-      console.log(doneCardSet,cardSet)
-    }else if(cardSet[0].querySelector('.card-back').style.backgroundColor !==cardSet[1].querySelector('.card-back').style.backgroundColor){
-      $message.textContent =`오답입니다!`;
-      setTimeout(()=>{
-        cardSet.forEach(card => card.classList.remove('flipped'))
-        cardSet = []
-      }, 1000)
+  if(cardSet.length ===2){
   }
+  const selectedCard = event.currentTarget
+  event.currentTarget.classList.add('flipped')
+  cardSet.push(selectedCard)
+  console.log(document.querySelector('.card-back'))
+
+  console.log(cardSet.length)  
+  console.log(cardSet,selectedCard)
+  
+  if(cardSet.length !==2){
+    return;
+  }
+  if(cardSet[0].querySelector('.card-back').style.backgroundColor ===cardSet[1].querySelector('.card-back').style.backgroundColor){
+    $message.textContent = `정답입니다!`
+    doneCardSet.push(cardSet.splice(0,2))
+    doneCardSet = doneCardSet.concat(cardSet)
+    cardSet = [];
+    console.log(doneCardSet,cardSet)
+    clickable =false
+  }else if(cardSet[0].querySelector('.card-back').style.backgroundColor !==cardSet[1].querySelector('.card-back').style.backgroundColor){
+    $message.textContent =`오답입니다!`;
+    setTimeout(()=>{
+      cardSet.forEach(card => card.classList.remove('flipped'))
+      cardSet = []
+      clickable = false
+    }, 1000)
+  }
+  clickable =true
   if(doneCardSet.length === 6){
     $message.textContent = `축하합니다`
     return;
