@@ -1,95 +1,106 @@
-'use strict';
-const $message = document.querySelector('#message')
-const wrapper = document.querySelector('#wrapper')
-let shuffled = [];
-let colors = ['red', 'orange', 'yellow', 'green', 'white', 'black'];
-let colorsConcat = colors.concat(colors);
+'use strict'
 
-for(let i = 0; colorsConcat.length > 0; i++){
-  const randomIndex = Math.floor((Math.random() * colorsConcat.length))
-  shuffled.push(colorsConcat.splice(randomIndex, 1))
-  // or
-  // const randomIndex = Math.floor(Math.random() * colorsConcat.length)
-  // shuffled = shuffled.concat(colorsConcat.splice(randomIndex,1))
+const $wrapper = document.querySelector('#wrapper')
+const colors = ['red', 'orange', 'yellow', 'pink', 'black', 'aqua'];
+let copyColors = colors.concat(colors)
+let shuffled = [];
+let clicked = [];
+let completed = [];
+let clickable = true
+
+
+//카드 색깔 섞기
+function shuffle(){
+  for(let i =0; copyColors.length > 0; i++){
+    const randomIndex = Math.floor(Math.random() * copyColors.length)
+    const randomArray = copyColors.splice(randomIndex, 1)[0]
+    shuffled.push(randomArray)
+    
+    // shuffled = shuffled.concat(copyColors.splice(randomIndex, 1));
+    // shuffled.push(copyColors.splice(randomIndex, 1))
+  }
 }
 
 //카드 만들기
-for(let i =0; i<12; i++){
-  const card = document.createElement('div')
-  card.classList.add('card');
-  card.addEventListener('click', turnEvent)
+function createCard(i){
+  //div.card > div.card-inner > div.card-front + div.card-back
+  const card = document.createElement('div');
+  card.className = 'card'; //.card 태그 생성
   const cardInner = document.createElement('div');
-  cardInner.classList.add('card-inner');
+  cardInner.className = 'card-inner'; //card-inner 태그 생성
   const cardFront = document.createElement('div');
-  cardFront.classList.add('card-front');
-  const cardBack = document.createElement('div');
-  cardBack.classList.add('card-back');
-  wrapper.append(card);
-  card.append(cardInner);
-  cardInner.append(cardFront);
-  cardInner.append(cardBack);
+  cardFront.className = 'card-front'; //card-front 태그 생성
+  const cardBack = document.createElement('div'); 
+  cardBack.className = 'card-back';
   cardBack.style.backgroundColor = shuffled[i]
+  cardInner.appendChild(cardFront);
+  cardInner.appendChild(cardBack);
+  card.appendChild(cardInner);
+  console.log(cardBack.style.backgroundColor)
+  return card;
 }
 
-const card = document.querySelectorAll('.card')
-let clickable = true;
-  card.forEach((card, index) =>{
+function clickEvent(){
+  if(!clickable||clicked.includes(this)||completed.includes(this)){
+    return;
+  }
+  this.classList.add('flipped')
+  clicked.push(this)
+  if(clicked.length !==2){
+    return;
+  } //clicked의 길이가 2일때만 발동!
+  if(clicked[0].querySelector('.card-back').style.backgroundColor!==clicked[1].querySelector('.card-back').style.backgroundColor){
+    // console.logclicked[0]
     clickable = false
-    //시작할 때 카드 뒤집기
-    setTimeout(() => {
-      card.classList.add('flipped');
-    }, 1000 + (100*index))
+    setTimeout(()=>{
+      clicked[0].classList.remove('flipped')
+      clicked[1].classList.remove('flipped')
+      clicked=[];
+      clickable = true;
+    },500)
+  }else if(clicked[0].querySelector('.card-back').style.backgroundColor===clicked[1].querySelector('.card-back').style.backgroundColor){
+    completed.push(clicked[0]);
+    completed.push(clicked[1]);
+    clicked = [];
+    if(completed.length ===12){
+      setTimeout(()=>{
+        alert('축하!')
+        resetGame();
+      },1000)
+    }
+  
+  }
+}
 
-    //시작할 때 뒤집은 카드 다시 뒤집기
+function startGame(){
+  shuffle()
+  for(let i=0; i <12; i++){
+    const card = createCard(i)
+    card.addEventListener('click', clickEvent)
+    $wrapper.appendChild(card)
+  }
+  
+  const card = document.querySelectorAll('.card')
+  card.forEach((card,index)=>{
+    clickable = false   //클릭 못하게 만들기
+    setTimeout(()=>{
+      card.classList.add('flipped')
+    }, index + (index*100))
     setTimeout(()=>{
       card.classList.remove('flipped')
-      clickable = true;
-    }, 2500)
-  })
+      clickable = true
+  }, 3000)
+})
+}
+startGame()
 
-let cardSet =[];
-let doneCardSet = []
-
-function turnEvent(event){
-  if(!clickable||doneCardSet.includes(event.currentTarget)|| cardSet[0] ===this ||doneCardSet.length === 6)
-  return;
-  if(cardSet.length ===2){
-  }
-  const selectedCard = event.currentTarget
-  event.currentTarget.classList.add('flipped')
-  cardSet.push(selectedCard)
-  console.log(document.querySelector('.card-back'))
-
-  console.log(cardSet.length)  
-  console.log(cardSet,selectedCard)
-  
-  if(cardSet.length !==2){
-    return;
-  }
-  if(cardSet[0].querySelector('.card-back').style.backgroundColor ===cardSet[1].querySelector('.card-back').style.backgroundColor){
-    $message.textContent = `정답입니다!`
-    doneCardSet.push(cardSet.splice(0,2))
-    doneCardSet = doneCardSet.concat(cardSet)
-    cardSet = [];
-    console.log(doneCardSet,cardSet)
-    clickable =false
-  }else if(cardSet[0].querySelector('.card-back').style.backgroundColor !==cardSet[1].querySelector('.card-back').style.backgroundColor){
-    $message.textContent =`오답입니다!`;
-    setTimeout(()=>{
-      cardSet.forEach(card => card.classList.remove('flipped'))
-      cardSet = []
-      clickable = false
-    }, 1000)
-  }
-  clickable =true
-  if(doneCardSet.length === 6){
-    $message.textContent = `축하합니다`
-    return;
-  }
+function resetGame(){
+  $wrapper.innerText = '';
+  copyColors = colors.concat(colors);
+  shuffled = [];
+  clicked = [];
+  completed = [];
+  startGame();
 }
 
-// //버그 및 개선사항
-// 1. 카드 뒤집기 무한으로 되는거
-// 2. 뒤집는 상황에서 뒤집기 > clickable 플래그 함수 만들기
-// 3. 오답입니다. 정답입니다. 제대로 안되는 거 해결하기
-// 4. 게임이 종료되면 축하 메세지와 게임 새로 시작하기
+// 12개 카드 만들기
