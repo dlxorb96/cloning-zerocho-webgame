@@ -63,16 +63,18 @@ function clickEvent(){
     completed.push(clicked[1]);
     clicked = [];
     if(completed.length ===12){
+      checkTime()
       setTimeout(()=>{
         alert('축하!')
         resetGame();
-      },1000)
+      },4000)
     }
   
   }
 }
-
+let startTime;
 function startGame(){
+  startTime = new Date()
   shuffle()
   for(let i=0; i <12; i++){
     const card = createCard(i)
@@ -101,6 +103,15 @@ function resetGame(){
   clicked = [];
   completed = [];
   startGame();
+}
+
+function checkTime(){
+  const time = document.createElement('div')
+  document.body.appendChild(time)
+  const endTime = new Date()
+  const minutesDiff = (endTime.getMinutes()) - (startTime.getMinutes())
+  const secondsDiff = (endTime.getSeconds()) - (startTime.getSeconds())
+  time.innerText = `걸린 시간: ${minutesDiff}분 : ${secondsDiff}초`
 }
 
 // 12개 카드 만들기
